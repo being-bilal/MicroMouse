@@ -1,5 +1,7 @@
 import API
 from helper_func import log, maze_info, solver_info
+import numpy as np
+
 
 def main():
     log("Running...")
