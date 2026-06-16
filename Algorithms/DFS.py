@@ -101,7 +101,7 @@ def main():
         else:
             stack.pop()
             if not stack:
-                log("No more nodes to visit, stopping.")
+                log("NO MORE NODES TO VISIT, ENDING PROGRAM")
                 break
             target_node = stack.pop()
             visited_nodes.add(target_node)
