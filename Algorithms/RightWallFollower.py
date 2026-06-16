@@ -1,4 +1,4 @@
-import API
+import API 
 from helper_func import log, maze_info, solver_info
 
 def main():
@@ -8,12 +8,12 @@ def main():
     API.setText(0, 0, "START")
     while True:
         API.setColor(0, 0, "R")
-        if not API.wallLeft():
-            API.turnLeft()
-        while API.wallFront():
+        if not API.wallRight():
             API.turnRight()
+        while API.wallFront():
+            API.turnLeft()
         API.moveForward()
         solver_info()
-
+        
 if __name__ == "__main__":
     main()

@@ -4,6 +4,7 @@ class MouseCrashedError(Exception):
     pass
 
 def command(args, return_type=None):
+    # Send a command to the simulator and return the response, if any.  
     line = " ".join([str(x) for x in args]) + "\n"
     sys.stdout.write(line)
     sys.stdout.flush()

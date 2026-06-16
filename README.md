@@ -1,5 +1,3 @@
-[[Projects]] [[Research]] [[Robotics]]
-
 ## Object 
 Build a maze solving micromouse and test existing alogrithms to determine the best fit for the physical implementation. And improve the performance the existing algorithm experimentally for the research if possible.
 ## Simulation 
