@@ -22,6 +22,9 @@ def solver_info():
 def get_position():
     return position
 
+def get_heading():
+    return heading
+
 def turnLeft():
     global heading
     idx = directions.index(heading)
@@ -44,4 +47,6 @@ def moveForward():
         position = (position[0], position[1] - 1)
     elif heading == "W":
         position = (position[0] - 1, position[1])
+    x, y = get_position()
+    API.setColor(x, y, "G")
     API.moveForward()
