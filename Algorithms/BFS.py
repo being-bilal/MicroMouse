@@ -3,10 +3,12 @@ from helper_func import *
 import numpy 
 from collections import deque
 
-nodes = deque([0, 0])  
+nodes = deque([])  
 visited_nodes = set()
 stack = []
 target_node = (0,0)
+wall_map = {}
+
 
 def left_of(h):
     return directions[(directions.index(h) - 1) % 4]
@@ -20,12 +22,21 @@ def opposite(h):
 def store_walls():
     x, y = get_position()
     heading = get_heading()
+    walls = []
+    global wall_map
     if API.wallFront():
+        API.setText(x, y, "*")
+        nodes.append((x, y))
         API.setWall(x, y, heading.lower())
+        walls.append(heading.lower())
     if API.wallLeft():
         API.setWall(x, y, left_of(heading).lower())
+        walls.append(left_of(heading).lower())
     if API.wallRight():
         API.setWall(x, y, right_of(heading).lower())
+        wall_map[(x, y)] = right_of(heading).lower()
+        walls.append(right_of(heading).lower())
+    wall_map[(x, y)] = walls
 
 def check_available_nodes():
     x, y = get_position()
@@ -85,7 +96,7 @@ def move_to_target_node(target_node):
         while get_position()[1] > target_y:
             moveForward()
 
-def main():
+def BFS():
     log("Running...")
     maze_info()
     API.setColor(0, 0, "R")
@@ -95,20 +106,17 @@ def main():
         stack.append(get_position())
         visited_nodes.add(get_position())
         available_nodes = check_available_nodes()
-        log("Available nodes: {}".format(available_nodes))
         if available_nodes:
             target_node = available_nodes.pop()
         else:
             stack.pop()
             if not stack:
                 log("NO MORE NODES TO VISIT, ENDING PROGRAM")
-                break
+                return nodes, wall_map
             target_node = stack.pop()
             visited_nodes.add(target_node)
         
         move_to_target_node(target_node)
-        log("Target node: {}".format(target_node))
-        
         
 if __name__ == "__main__":
-    main()
+    BFS()
