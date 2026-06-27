@@ -16,7 +16,7 @@ goal = [(API.mazeWidth() // 2 - 1, API.mazeHeight() // 2 - 1),
         (API.mazeWidth() // 2, API.mazeHeight() // 2 - 1),
         (API.mazeWidth() // 2, API.mazeHeight() // 2)]
 
-def move_to_connected_node(current_node, next_node):
+def move_to_node(current_node, next_node):
     x1, y1 = current_node
     x2, y2 = next_node
     distance_traveled = 0 
@@ -27,26 +27,30 @@ def move_to_connected_node(current_node, next_node):
                     turnLeft()
                 while get_position() != next_node:
                     moveForward()
-                    distance_traveled += 1
+                    x, y = get_position()
+                    API.setColor(x, y, "B")
             else:
                 while get_heading() != "S":
                     turnLeft()
                 while get_position() != next_node:
                     moveForward()
-                    distance_traveled += 1
+                    x, y = get_position()
+                    API.setColor(x, y, "B")
         elif y1 == y2:
             if x1 < x2:
                 while get_heading() != "E":
                     turnLeft()
                 while get_position() != next_node:
                     moveForward()
-                    distance_traveled += 1
+                    x, y = get_position()
+                    API.setColor(x, y, "B")
             else:
                 while get_heading() != "W":
                     turnLeft()
                 while get_position() != next_node:
                     moveForward()
-                    distance_traveled += 1
+                    x, y = get_position()
+                    API.setColor(x, y, "B")
     return distance_traveled
 
 
@@ -108,27 +112,47 @@ def main():
     node: sorted(neighbors, key=node_sort_key)
     for node, neighbors in sorted(graph.items(), key=lambda item: node_sort_key(item[0]))
     }
-    log("Graph: {}".format(graph))
-    log("Node Weights: {}".format(node_weight))
-    log("Edge Weights: {}".format(edge_weight))
     
-    
+    # ===========================================================================
     # Djikstra Algorithm Application 
     # start moving through the graph and updating the node weights
+    visited = set()
     if get_position() == (0, 0):
-        for node in graph:
-            for i in graph[node]:
-                log(i)
-            """
-            d = move_to_connected_node((0, 0), i)
-            if d < node_weight[i]:
-                node_weight[i] = d
-                parents[i] = (0,0)
+        while len(visited) < len(graph):
+            # Pick the unvisited node with the smallest distance
+            current = min(
+                (n for n in graph if n not in visited),
+                key=lambda n: node_weight[n]
+            )
+            # check if the goal nodes are reached 
+            if current in goal:
+                target = current
+                break
+            
+            visited.add(current)
+            for neighbor in graph[current]:
+                d = node_weight[current] + edge_weight[(current, neighbor)]
+                if d < node_weight[neighbor]:
+                    node_weight[neighbor] = d
+                    parents[neighbor] = current
+                else:
+                    pass
+        # Reconstructing the path found by the djikstra
+        path = []
+        current = target
+        while current != (0, 0):
+            path.append(current)
+            current = parents[current]
+        path.append((0, 0))
+        path.reverse()
+        
+        # Moving to the target using the path  
+        for i in range(len(path)):
+            if path[i] == target:
+                log("Target Reached")
             else:
-                pass
-            log("Node Weights: {}".format(node_weight))
-            log(parents)
-            """
+                log(f"Moving: {path[i]} -> {path[i+1]}")
+                move_to_node(path[i], path[i+1])
 
 if __name__ == "__main__":
     main()
