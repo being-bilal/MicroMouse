@@ -30,6 +30,10 @@ def turnLeft():
     idx = directions.index(heading)
     heading = directions[(idx - 1) % 4]   
     API.turnLeft()
+    
+def node_sort_key(node):
+    # Put (0,0) first, then sort by x and y
+    return (0 if node == (0, 0) else 1, node[0], node[1])
 
 def turnRight():
     global heading

@@ -111,7 +111,6 @@ def BFS():
         else:
             stack.pop()
             if not stack:
-                log("NO MORE NODES TO VISIT, ENDING PROGRAM")
                 return nodes, wall_map
             target_node = stack.pop()
             visited_nodes.add(target_node)
