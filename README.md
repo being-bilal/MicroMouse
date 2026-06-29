@@ -28,7 +28,7 @@ Dijkstra's Algorithm is a shortest-path algorithm used to find the minimum-cost 
  problems in using this algorithm, the major one being that the whole maze has to be traversed. For identifying the nodes, it is important to travel all the parts of the maze, irrespective of whether that portion of the maze contains the shortest path or not.
 
 #### Flood Fill Method
-It is a online path finding algorithm that doesnt require intial traversal of the maze, it assign every cell a number representing its distance from the goal. The goal gets 0. The mouse always moves to the lowest numbered neighbor. It's walking downhill toward zero. The assignment of the numbers to the cell at the start is done by determine the manhattan distance where no walls are considered and each cell is given the value of the manhattan distance from the target position.
+It is a online path finding algorithm that doesnt require intial traversal of the maze, it assign every cell a number representing its distance from the goal. The goal gets 0. The mouse always moves to the lowest numbered neighbor. It's walking downhill toward zero. The assignment of the numbers to the cell at the start is done by determining the manhattan distance where no walls are considered and each cell is given the value of the manhattan distance from the target position.
 * The maze array = a 16×16 grid where each cell stores one number, its current best-known distance to the goal.
 
 * The wall array = a separate structure storing every wall the mouse has physically discovered so far. 
