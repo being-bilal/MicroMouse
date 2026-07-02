@@ -21,7 +21,6 @@ for goal in goals:
     maze_map[x][y] = 0
 for i, row in enumerate(maze_map):
         for j, cell in enumerate(row):
-            # d = |x₁ - x₂| + |y₁ - y₂|
             x1, y1 = i, j
             distance = []
             for goal in goals:
@@ -163,8 +162,6 @@ def get_target_direction(cell, temp):
         if walls[i] == 0:
             available_cell_index.append(i)
     available_cells = [temp[i] for i in available_cell_index]
-    log("Current cell: {}".format(get_cell_value(cell)))
-    log("Available cells: {}".format(available_cells))
     # available cell with minimum value 
     target_cell = min(available_cell_index, key=lambda i: temp[i])
     if target_cell == 0:
