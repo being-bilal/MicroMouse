@@ -165,7 +165,7 @@ def get_target_direction(cell, temp):
     available_cells = [temp[i] for i in available_cell_index]
     log("Current cell: {}".format(get_cell_value(cell)))
     log("Available cells: {}".format(available_cells))
-    # available cell with minimum value ")
+    # available cell with minimum value 
     target_cell = min(available_cell_index, key=lambda i: temp[i])
     if target_cell == 0:
         target_direction = 'N'
@@ -183,10 +183,10 @@ def check_available_nodes(cell, temp):
     available_cell_index = []
     walls = wall_map[x][y]
     neighbor_coords = [
-        (x, y+1),  # N
-        (x, y-1),  # S
-        (x-1, y),  # W
-        (x+1, y)   # E
+        (x, y+1),  
+        (x, y-1),  
+        (x-1, y),  
+        (x+1, y)   
     ]
     for i, val in enumerate(temp):
         if walls[i] == 0:
