@@ -113,8 +113,7 @@ def main():
     for node, neighbors in sorted(graph.items(), key=lambda item: node_sort_key(item[0]))
     }
     
-    # ===========================================================================
-    # Djikstra Algorithm Application 
+    # Djikstra Algorithm  
     # start moving through the graph and updating the node weights
     visited = set()
     if get_position() == (0, 0):
