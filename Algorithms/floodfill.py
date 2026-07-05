@@ -160,7 +160,7 @@ def get_target_direction(cell, temp):
     walls = wall_map[x][y]    
     for i, val in enumerate(temp):
         if walls[i] == 0:
-            available_cell_index.append(i)
+            available_cell_index.append(i) 
     available_cells = [temp[i] for i in available_cell_index]
     # available cell with minimum value 
     target_cell = min(available_cell_index, key=lambda i: temp[i])
