@@ -1,11 +1,13 @@
+# A* Algorithm Implementation 
+# Only difference between A* and Djikstra is the addition of a heuristic function h(n) to the node weight updation
+
 import API
 from helper_func import *
 import numpy as np
 from BFS import BFS
 
-if API.mazeWidth() == API.mazeHeight():
-    length = API.mazeWidth()
-elif API.mazeWidth() > API.mazeHeight():
+HEADINGS = ["N", "E", "S", "W"]
+if API.mazeWidth() > API.mazeHeight():
     length = API.mazeWidth()
 else:
     length = API.mazeHeight()
@@ -16,7 +18,14 @@ goal = [(API.mazeWidth() // 2 - 1, API.mazeHeight() // 2 - 1),
         (API.mazeWidth() // 2, API.mazeHeight() // 2 - 1),
         (API.mazeWidth() // 2, API.mazeHeight() // 2)]
 
-HEADINGS = ["N", "E", "S", "W"]
+def min_distance(node):
+    # min distance from node to any goal cell
+    d = []
+    for goal_node in goal:
+        d.append(abs(node[0] - goal_node[0]) + abs(node[1] - goal_node[1]))
+    return min(d)
+
+
 def move_to_node(current_node, next_node):
     x1, y1 = current_node
     x2, y2 = next_node
@@ -83,11 +92,21 @@ def main():
     
     # Assigning weights to the nodes in the graph
     # Initial weight : 0 for the initial node, infinity for all other nodes
+    
+    # In A* algorithm, we maintain two scores for each node:
+    # g_score: The cost of the path from the start node to the current node.
+    # f_score: The estimated total cost from the start node to the goal node through the
+    # Node Weight : f(n) = g(n) + h(n)
+    g_score = {}
+    f_score = {}
     for node in graph:
         if node == (0, 0):
-            node_weight[node] = 0
+            g_score[node] = 0
+            h_n = min_distance(node)
+            f_score[node] = h_n
         else:
-            node_weight[node] = float('inf')
+            g_score[node] = float('inf')
+            f_score[node] = float('inf')
     
     # Assigning weights to the edges in the graph
     for node in graph:
@@ -103,7 +122,7 @@ def main():
     for node, neighbors in sorted(graph.items(), key=lambda item: node_sort_key(item[0]))
     }
     
-    # Djikstra Algorithm  
+    # A* Algorithm 
     # start moving through the graph and updating the node weights
     visited = set()
     if get_position() == (0, 0):
@@ -111,7 +130,7 @@ def main():
             # Pick the unvisited node with the smallest distance
             current = min(
                 (n for n in graph if n not in visited),
-                key=lambda n: node_weight[n]
+                key=lambda n: f_score[n]
             )
             # check if the goal nodes are reached 
             if current in goal:
@@ -120,9 +139,12 @@ def main():
             
             visited.add(current)
             for neighbor in graph[current]:
-                d = node_weight[current] + edge_weight[(current, neighbor)]
-                if d < node_weight[neighbor]:
-                    node_weight[neighbor] = d
+                g_n = g_score[current] + edge_weight[(current, neighbor)]
+                if g_n < g_score[neighbor]:
+                    # f(n) = g(n) + h(n)
+                    g_score[neighbor] = g_n
+                    h_n = min_distance(neighbor)
+                    f_score[neighbor] = g_n + h_n
                     parents[neighbor] = current
 
         # Reconstructing the path found by the djikstra
