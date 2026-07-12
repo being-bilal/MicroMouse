@@ -22,21 +22,36 @@ def opposite(h):
 def store_walls():
     x, y = get_position()
     heading = get_heading()
+    front = heading.lower()
+    left = left_of(heading).lower()
+    right = right_of(heading).lower()
+    back = opposite(heading).lower()
+    
     walls = []
-    global wall_map
     if API.wallFront():
+        API.setWall(x, y, front)
+        walls.append(front)
+    if API.wallLeft():
+        API.setWall(x, y, left)
+        walls.append(left)
+    if API.wallRight():
+        API.setWall(x, y, right)
+        walls.append(right)
+        
+    wall_map[(x, y)] = walls
+    all_dirs = {'n', 'e', 's', 'w'}
+    open_dirs = all_dirs - set(walls)
+    opposite_pairs = {frozenset({'n', 's'}), frozenset({'e', 'w'})}
+    is_node = False
+    if (x, y) == (0, 0):
+        is_node = True
+    elif len(open_dirs) != 2:
+        is_node = True 
+    elif frozenset(open_dirs) not in opposite_pairs:
+        is_node = True  
+    if is_node and (x, y) not in nodes:
         API.setText(x, y, "*")
         nodes.append((x, y))
-        API.setWall(x, y, heading.lower())
-        walls.append(heading.lower())
-    if API.wallLeft():
-        API.setWall(x, y, left_of(heading).lower())
-        walls.append(left_of(heading).lower())
-    if API.wallRight():
-        API.setWall(x, y, right_of(heading).lower())
-        wall_map[(x, y)] = right_of(heading).lower()
-        walls.append(right_of(heading).lower())
-    wall_map[(x, y)] = walls
 
 def check_available_nodes():
     x, y = get_position()
