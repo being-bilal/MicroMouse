@@ -2,10 +2,15 @@ import API
 from helper_func import  *
 import numpy as np
 
+if API.mazeWidth() > API.mazeHeight():
+    length = API.mazeWidth()
+else:
+    length = API.mazeHeight()
+
 # List used to store temporary values of neighbouring cells
 temp = [0, 0, 0, 0]                          # [N, S, W, E]
 # Array used to store walls
-wall_map = [[None for _ in range(16)] for _ in range(16)]
+wall_map = [[None for _ in range(length)] for _ in range(length)]
 # List of visited nodes
 visited = []
 
@@ -15,7 +20,7 @@ goals = [(API.mazeWidth() // 2 - 1, API.mazeHeight() // 2 - 1),
         (API.mazeWidth() // 2, API.mazeHeight() // 2)]
 
 # Each cell is given the initialvalue of the manhattan distance from the goals
-maze_map = np.ones((16,16))
+maze_map = np.ones((length,length))
 for goal in goals:
     x, y = goal 
     maze_map[x][y] = 0
@@ -41,10 +46,10 @@ def display_cell_value(map):
 def get_neighbour_vals(cell):
     x, y = cell
     return [
-        int(maze_map[x][y+1]) if y+1 < 16 else float('inf'),  
+        int(maze_map[x][y+1]) if y+1 < length else float('inf'),  
         int(maze_map[x][y-1]) if y-1 >= 0 else float('inf'),  
         int(maze_map[x-1][y]) if x-1 >= 0 else float('inf'),  
-        int(maze_map[x+1][y]) if x+1 < 16 else float('inf')   
+        int(maze_map[x+1][y]) if x+1 < length else float('inf')   
     ]
 
 # Gets the walls of the current cell and updates the wall_map accordingly
@@ -132,7 +137,7 @@ def update_map():
         for i, (nx, ny) in enumerate(neighbor_coords):
             if walls[i] == 1:
                 continue
-            if not (0 <= nx < 16 and 0 <= ny < 16):
+            if not (0 <= nx < length and 0 <= ny < length):
                 continue
             
             n_walls = wall_map[nx][ny]
@@ -177,34 +182,11 @@ def get_target_direction(cell, temp):
 
 def check_available_nodes(cell, temp):
     x, y = cell
-    available_cell_index = []
     walls = wall_map[x][y]
-    neighbor_coords = [
-        (x, y+1),  
-        (x, y-1),  
-        (x-1, y),  
-        (x+1, y)   
-    ]
-    for i, val in enumerate(temp):
-        if walls[i] == 0:
-            nx, ny = neighbor_coords[i]
-            if 0 <= nx < 16 and 0 <= ny < 16:
-                available_cell_index.append(i)
-    
-    # Prefer unvisited cells with lower values
-    best_cell = None
-    best_value = float('inf')
-    for i in available_cell_index:
-        nx, ny = neighbor_coords[i]
-        if (nx, ny) not in visited or not visited:
-            if temp[i] < best_value:
-                best_value = temp[i]
-                best_cell = i
-    if best_cell is None:
-        # All neighbors visited
-        update_map()
-        new_temp = get_neighbour_vals(cell)
-        return get_target_direction(cell, new_temp)
+    available_cell_index = [i for i in range(4) if walls[i] == 0]
+    if not available_cell_index:
+        return None  # boxed in on all sides — shouldn't happen in a valid maze
+    best_cell = min(available_cell_index, key=lambda i: temp[i])
     return get_target_direction_index(best_cell)
 
 def get_target_direction_index(index):
@@ -238,13 +220,14 @@ def main():
         display_cell_value(maze_map)
         # update wall map
         update_walls(active_cell, get_heading())
+        visited.append(active_cell)      
+        update_map() # update the maze_map based on the updated wall_map
         # get value of the neigbouring cells
         temp = get_neighbour_vals(active_cell)
         # Get the target direction of the next node
         target_direction = check_available_nodes(active_cell, temp)
         # move in that direction 
         move_in(target_direction)
-        visited.append(active_cell)
 
 if __name__ == "__main__":
     main()
