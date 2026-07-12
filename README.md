@@ -27,7 +27,12 @@ Dijkstra's Algorithm is a shortest-path algorithm used to find the minimum-cost 
 * It continues until all nodes have been processed or the traget node is reached. Then it traverse back to the initial node using the parents of the nodes.
  problems in using this algorithm, the major one being that the whole maze has to be traversed. For identifying the nodes, it is important to travel all the parts of the maze, irrespective of whether that portion of the maze contains the shortest path or not.
 
-#### Flood Fill Method
+#### A* ALGORITHM 
+It is an improved version of Djikstra's algorithm in which determines the shortest-path the goal node from the staring node in a weighted graph. It works similarly to the Djikstra as it also computes and assigns each node a weight g(n) using the edge weights from the starting node but unlike Djikstra, A* also assigns the heuristic weight h(n) from that particular node the end node. This is done using Euclidean distance or Manhattan distance between the node and the goal such that the weight that gets assigned to the node becomes the sum of both g(n) and h(n). This allows A* to have a rough idea of the goal so did doesnt explore nodes that are away from the goal, this makes it much faster in comparsion but rely on the heuristic function that is being used. 
+
+In simpler terms Dijkstra explores outward from the start in all directions whereas, A* explores toward the goal. If the heuristic is zero everywhere, then A* becomes exactly Dijkstra as it is the only difference between the two algorithms.
+
+#### FLOOD FILL METHOD
 It is a online path finding algorithm that doesnt require intial traversal of the maze, it assign every cell a number representing its distance from the goal. The goal gets 0. The mouse always moves to the lowest numbered neighbor. It's walking downhill toward zero. The assignment of the numbers to the cell at the start is done by determining the manhattan distance where no walls are considered and each cell is given the value of the manhattan distance from the target position.
 * The maze array = a 16×16 grid where each cell stores one number, its current best-known distance to the goal.
 

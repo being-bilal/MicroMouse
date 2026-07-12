@@ -3,9 +3,9 @@ from helper_func import *
 import numpy as np
 from BFS import BFS
 
-HEADINGS = ["N", "E", "S", "W"]
-
-if API.mazeWidth() > API.mazeHeight():
+if API.mazeWidth() == API.mazeHeight():
+    length = API.mazeWidth()
+elif API.mazeWidth() > API.mazeHeight():
     length = API.mazeWidth()
 else:
     length = API.mazeHeight()
@@ -16,7 +16,7 @@ goal = [(API.mazeWidth() // 2 - 1, API.mazeHeight() // 2 - 1),
         (API.mazeWidth() // 2, API.mazeHeight() // 2 - 1),
         (API.mazeWidth() // 2, API.mazeHeight() // 2)]
 
-
+HEADINGS = ["N", "E", "S", "W"]
 def move_to_node(current_node, next_node):
     x1, y1 = current_node
     x2, y2 = next_node
