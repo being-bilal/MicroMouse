@@ -1,5 +1,6 @@
-import API 
+import API
 from helper_func import log, maze_info, solver_info
+
 
 def main():
     log("Running...")
@@ -14,6 +15,7 @@ def main():
             API.turnLeft()
         API.moveForward()
         solver_info()
-        
+
+
 if __name__ == "__main__":
     main()

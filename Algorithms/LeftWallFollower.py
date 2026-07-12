@@ -17,5 +17,6 @@ def main():
         API.moveForward()
         solver_info()
 
+
 if __name__ == "__main__":
     main()

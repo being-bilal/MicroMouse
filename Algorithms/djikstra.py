@@ -11,10 +11,12 @@ else:
     length = API.mazeHeight()
 
 # center four cells are the goal cells for the maze
-goal = [(API.mazeWidth() // 2 - 1, API.mazeHeight() // 2 - 1),
-        (API.mazeWidth() // 2 - 1, API.mazeHeight() // 2),
-        (API.mazeWidth() // 2, API.mazeHeight() // 2 - 1),
-        (API.mazeWidth() // 2, API.mazeHeight() // 2)]
+goal = [
+    (API.mazeWidth() // 2 - 1, API.mazeHeight() // 2 - 1),
+    (API.mazeWidth() // 2 - 1, API.mazeHeight() // 2),
+    (API.mazeWidth() // 2, API.mazeHeight() // 2 - 1),
+    (API.mazeWidth() // 2, API.mazeHeight() // 2),
+]
 
 
 def move_to_node(current_node, next_node):
@@ -36,7 +38,7 @@ def move_to_node(current_node, next_node):
         turnRight()
     elif diff == 3:
         turnLeft()
-        
+
     # diff == 0: already facing the right way, no turn needed
     while get_position() != next_node:
         moveForward()
@@ -51,44 +53,44 @@ def main():
     node_weight = {}
     edge_weight = {}
     parents = {}
-    # finding neighbors for each node 
-    # Neighbors are defined as the closest node in each direction without a wall in between 
+    # finding neighbors for each node
+    # Neighbors are defined as the closest node in each direction without a wall in between
     graph = {}
     for node in nodes:
         x, y = node
         neighbors = []
         if (x, y) in wall_map:
             walls = wall_map[(x, y)]
-            
+
         for i in range(1, length + 1):
-            if 'n' not in walls and (x, y + i) in nodes:
+            if "n" not in walls and (x, y + i) in nodes:
                 neighbors.append((x, y + i))
                 break
-            
+
         for i in range(1, length + 1):
-            if 'e' not in walls and (x + i, y) in nodes:
+            if "e" not in walls and (x + i, y) in nodes:
                 neighbors.append((x + i, y))
                 break
 
         for i in range(1, length + 1):
-            if 's' not in walls and (x, y - i) in nodes:
+            if "s" not in walls and (x, y - i) in nodes:
                 neighbors.append((x, y - i))
                 break
 
         for i in range(1, length + 1):
-            if 'w' not in walls and (x - i, y) in nodes:
+            if "w" not in walls and (x - i, y) in nodes:
                 neighbors.append((x - i, y))
                 break
         graph[node] = neighbors
-    
+
     # Assigning weights to the nodes in the graph
     # Initial weight : 0 for the initial node, infinity for all other nodes
     for node in graph:
         if node == (0, 0):
             node_weight[node] = 0
         else:
-            node_weight[node] = float('inf')
-    
+            node_weight[node] = float("inf")
+
     # Assigning weights to the edges in the graph
     for node in graph:
         for neighbor in graph[node]:
@@ -99,25 +101,26 @@ def main():
 
     # sorting graph
     graph = {
-    node: sorted(neighbors, key=node_sort_key)
-    for node, neighbors in sorted(graph.items(), key=lambda item: node_sort_key(item[0]))
+        node: sorted(neighbors, key=node_sort_key)
+        for node, neighbors in sorted(
+            graph.items(), key=lambda item: node_sort_key(item[0])
+        )
     }
-    
-    # Djikstra Algorithm  
+
+    # Djikstra Algorithm
     # start moving through the graph and updating the node weights
     visited = set()
     if get_position() == (0, 0):
         while len(visited) < len(graph):
             # Pick the unvisited node with the smallest distance
             current = min(
-                (n for n in graph if n not in visited),
-                key=lambda n: node_weight[n]
+                (n for n in graph if n not in visited), key=lambda n: node_weight[n]
             )
-            # check if the goal nodes are reached 
+            # check if the goal nodes are reached
             if current in goal:
                 target = current
                 break
-            
+
             visited.add(current)
             for neighbor in graph[current]:
                 d = node_weight[current] + edge_weight[(current, neighbor)]
@@ -133,14 +136,15 @@ def main():
             current = parents[current]
         path.append((0, 0))
         path.reverse()
-        
-        # Moving to the target using the path  
+
+        # Moving to the target using the path
         for i in range(len(path)):
             if path[i] == target:
                 log("Target Reached")
             else:
                 log(f"Moving: {path[i]} -> {path[i+1]}")
-                move_to_node(path[i], path[i+1])
+                move_to_node(path[i], path[i + 1])
+
 
 if __name__ == "__main__":
     main()

@@ -1,23 +1,26 @@
-import API 
+import API
 from helper_func import *
-import numpy 
+import numpy
 from collections import deque
 
-nodes = deque([])  
+nodes = deque([])
 visited_nodes = set()
 stack = []
-target_node = (0,0)
+target_node = (0, 0)
 wall_map = {}
 
 
 def left_of(h):
     return directions[(directions.index(h) - 1) % 4]
 
+
 def right_of(h):
     return directions[(directions.index(h) + 1) % 4]
 
+
 def opposite(h):
     return directions[(directions.index(h) + 2) % 4]
+
 
 def store_walls():
     x, y = get_position()
@@ -26,7 +29,7 @@ def store_walls():
     left = left_of(heading).lower()
     right = right_of(heading).lower()
     back = opposite(heading).lower()
-    
+
     walls = []
     if API.wallFront():
         API.setWall(x, y, front)
@@ -37,48 +40,49 @@ def store_walls():
     if API.wallRight():
         API.setWall(x, y, right)
         walls.append(right)
-        
+
     wall_map[(x, y)] = walls
-    all_dirs = {'n', 'e', 's', 'w'}
+    all_dirs = {"n", "e", "s", "w"}
     open_dirs = all_dirs - set(walls)
-    opposite_pairs = {frozenset({'n', 's'}), frozenset({'e', 'w'})}
+    opposite_pairs = {frozenset({"n", "s"}), frozenset({"e", "w"})}
     is_node = False
     if (x, y) == (0, 0):
         is_node = True
     elif len(open_dirs) != 2:
-        is_node = True 
+        is_node = True
     elif frozenset(open_dirs) not in opposite_pairs:
-        is_node = True  
+        is_node = True
     if is_node and (x, y) not in nodes:
         API.setText(x, y, "*")
         nodes.append((x, y))
+
 
 def check_available_nodes():
     x, y = get_position()
     heading = get_heading()
     available_nodes = set()
-    if heading == 'N':
+    if heading == "N":
         if not API.wallFront() and (x, y + 1) not in visited_nodes:
             available_nodes.add((x, y + 1))
         if not API.wallLeft() and (x - 1, y) not in visited_nodes:
             available_nodes.add((x - 1, y))
         if not API.wallRight() and (x + 1, y) not in visited_nodes:
             available_nodes.add((x + 1, y))
-    elif heading == 'E':
+    elif heading == "E":
         if not API.wallFront() and (x + 1, y) not in visited_nodes:
             available_nodes.add((x + 1, y))
         if not API.wallLeft() and (x, y + 1) not in visited_nodes:
             available_nodes.add((x, y + 1))
         if not API.wallRight() and (x, y - 1) not in visited_nodes:
             available_nodes.add((x, y - 1))
-    elif heading == 'S':
+    elif heading == "S":
         if not API.wallFront() and (x, y - 1) not in visited_nodes:
             available_nodes.add((x, y - 1))
         if not API.wallLeft() and (x + 1, y) not in visited_nodes:
             available_nodes.add((x + 1, y))
         if not API.wallRight() and (x - 1, y) not in visited_nodes:
             available_nodes.add((x - 1, y))
-    elif heading == 'W':
+    elif heading == "W":
         if not API.wallFront() and (x - 1, y) not in visited_nodes:
             available_nodes.add((x - 1, y))
         if not API.wallLeft() and (x, y - 1) not in visited_nodes:
@@ -86,6 +90,7 @@ def check_available_nodes():
         if not API.wallRight() and (x, y + 1) not in visited_nodes:
             available_nodes.add((x, y + 1))
     return available_nodes
+
 
 def move_to_target_node(target_node):
     x, y = get_position()
@@ -111,6 +116,7 @@ def move_to_target_node(target_node):
         while get_position()[1] > target_y:
             moveForward()
 
+
 def BFS():
     log("Running...")
     maze_info()
@@ -129,8 +135,9 @@ def BFS():
                 return nodes, wall_map
             target_node = stack.pop()
             visited_nodes.add(target_node)
-        
+
         move_to_target_node(target_node)
-        
+
+
 if __name__ == "__main__":
     BFS()
