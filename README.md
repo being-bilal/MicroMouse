@@ -1,6 +1,10 @@
 ## Object 
 Build a maze solving micromouse and test existing alogrithms to determine the best fit for the physical implementation. And improve the performance the existing algorithm experimentally for the research if possible.
-[▶ Watch the demo](./assets/djikstra_recording.gif)
+
+* [▶ Watch the demo](./assets/djikstra_recording.gif)
+[!NOTE] 
+*"This Repo uses https://github.com/mackorone/mms for simulation and API functions."*
+
 
 ## Simulation 
 Before the implementation of the algorithms in the hardware, they are first implemented in simulation to test their accuracy and compare multiple algorithms to determine the fastest and the most accurate of all.
